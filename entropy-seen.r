@@ -29,7 +29,7 @@ entropy-seen: func [
         permutation-count 1 1 ] [
         permutation-count (length? config/config-separator/chosen-from) 1 ]
 
-    padding-symbols-permutations: either error? try [ config/config-padding-symbols/chosen-from ] [
+    padding-symbols-permutations: either none? config/config-padding-symbols/chosen-from [
         permutation-count 1 1 ] [
         permutation-count (length? config/config-padding-symbols/chosen-from) 1 ]
 

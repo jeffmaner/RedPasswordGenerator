@@ -34,9 +34,9 @@ calculate-alphabet-size: func [
               or (config/config-separator/separator-type = 'specified-character) ]
     unless (error? try [ config/config-padding-symbols/padding-type ])
        and (not config/config-padding-symbols/padding-type = 'no-padding) [
-        unless (error? try [ config/config-padding-symbols/padding-character ]) [
-            unless error? try [ config/config-padding-symbols/symbols-before
-                                config/config-padding-symbols/symbols-after ] [
+        unless error? try [ config/config-padding-symbols/padding-character ] [
+            unless (none? config/config-padding-symbols/symbols-before)
+               and (none? config/config-padding-symbols/symbols-after) [
                 symbol?: symbol?
                       or (config/config-padding-symbols/padding-character = 'random-character)
                       or (config/config-padding-symbols/padding-character = 'specified-character)
@@ -68,8 +68,8 @@ calculate-minimum-password-length: func [
     unless (error? try [ config/config-padding-symbols/padding-type ])
        and (not config/config-padding-symbols/padding-type = 'no-padding) [
         unless (error? try [ config/config-padding-symbols/padding-character ]) [
-            unless error? try [ config/config-padding-symbols/symbols-before
-                                config/config-padding-symbols/symbols-after ] [
+            unless (none? config/config-padding-symbols/symbols-before)
+               and (none? config/config-padding-symbols/symbols-after) [
                 if (config/config-padding-symbols/padding-character = 'random-character) or
                    (config/config-padding-symbols/padding-character = 'specified-character) and
                    ((config/config-padding-symbols/symbols-before > 0) or
