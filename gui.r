@@ -39,7 +39,7 @@ generate-passwords: func [
 
     /local words line generated-passwords password
 ] [
-    words: read/lines config-words/dictionary
+    words: read/lines config/config-words/dictionary
     remove-each line words [ #"#" = first line ]
 
     filtered-words: filter-words words config
@@ -79,6 +79,13 @@ adaptive-padding: 3
 word-counts: [ 2 "2" 3 "3" 4 "4" 5 "5" 6 "6" 7 "7" 8 "8" 9 "9" 10 "10" ]
 word-lengths: [ 4 "4" 5 "5" 6 "6" 7 "7" 8 "8" 9 "9" 10 "10" 11 "11" 12 "12" ]
 password-counts: [ 1 "1" 2 "2" 3 "3" 4 "4" 5 "5" 6 "6" 7 "7" 8 "8" 9 "9" 10 "10" ]
+
+dictionaries:
+[
+    %dict_EN_sample.txt "English"
+    %dict_EN_dirty.txt "Dirty"
+    %dict_EN_curse.txt "Only Curses"
+]
 
 transformations:
 [
@@ -140,70 +147,74 @@ padding-characters-descriptions: get-descriptions padding-characters
 apply-preset: func [
     preset
 ] [
-    switch/default preset [
-        'apple-id   [ do load %config-appleid.r   ]
-        'default    [ do load %config-default.r   ]
-        'ntlm       [ do load %config-ntlm.r      ]
-        'security-q [ do load %config-securityq.r ]
-        'web-16     [ do load %config-web16.r     ]
-        'web-32     [ do load %config-web32.r     ]
-        'wifi       [ do load %config-wifi.r      ]
-        'xkcd       [ do load %config-xkcd.r      ]
+    config: copy []
+    config: switch/default preset [
+        'apple-id   [ load %config-appleid.r   ]
+        'default    [ load %config-default.r   ]
+        'ntlm       [ load %config-ntlm.r      ]
+        'security-q [ load %config-securityq.r ]
+        'web-16     [ load %config-web16.r     ]
+        'web-32     [ load %config-web32.r     ]
+        'wifi       [ load %config-wifi.r      ]
+        'xkcd       [ load %config-xkcd.r      ]
     ] [ view/flags [ below text "Invalid Config." button "OK" [ unview ] ] [ 'modal ] ]
 
-    ;user-specified-dictionary:
+    user-specified-dictionary/selected:
+        (index? find dictionaries config/config-words/dictionary) + 1 / 2
 
     user-specified-word-count/selected:
-        (index? find word-counts config-words/word-count) + 1 / 2
+        (index? find word-counts config/config-words/word-count) + 1 / 2
     user-specified-min-len/selected:
-        (index? find word-lengths config-words/minimum-length) + 1 / 2
+        (index? find word-lengths config/config-words/minimum-length) + 1 / 2
     user-specified-max-len/selected:
-        (index? find word-lengths config-words/maximum-length) + 1 / 2
+        (index? find word-lengths config/config-words/maximum-length) + 1 / 2
 
     user-specified-case-trans/selected:
-        (index? find transformations config-transformations/case-transformation) + 1 / 2
+        (index? find transformations config/config-transformations/case-transformation) + 1 / 2
 
     user-specified-separator-type/selected:
-        (index? find separator-types config-separator/separator-type) + 1 / 2
+        (index? find separator-types config/config-separator/separator-type) + 1 / 2
     if user-specified-separator-type/selected = random-character [
-        user-specified-random-separator-char/text: config-separator/chosen-from ]
+        user-specified-random-separator-char/text:
+            trim/all form reduce [ config/config-separator/chosen-from ] ]
     if user-specified-separator-type/selected = specified-character [
         user-specified-specified-separator-char/text:
-            form reduce [ config-separator/character ] ]
+            form reduce [ config/config-separator/character ] ]
 
     user-specified-padding-digits-before/selected:
-        (index? find padding-digits config-padding-digits/digits-before) + 1 / 2
+        (index? find padding-digits config/config-padding-digits/digits-before) + 1 / 2
     user-specified-padding-digits-after/selected:
-        (index? find padding-digits config-padding-digits/digits-after) + 1 / 2
+        (index? find padding-digits config/config-padding-digits/digits-after) + 1 / 2
 
     user-specified-padding-type/selected:
-        (index? find padding-types config-padding-symbols/padding-type) + 1 / 2
+        (index? find padding-types config/config-padding-symbols/padding-type) + 1 / 2
     if user-specified-padding-type/selected = fixed-padding [
         user-specified-fixed-padding-before/selected:
-            (index? find padding-digits config-padding-symbols/symbols-before) + 1 / 2
+            (index? find padding-digits config/config-padding-symbols/symbols-before) + 1 / 2
         user-specified-fixed-padding-after/selected:
-            (index? find padding-digits config-padding-symbols/symbols-after) + 1 / 2
+            (index? find padding-digits config/config-padding-symbols/symbols-after) + 1 / 2
         user-specified-fixed-padding-character/selected:
-            (index? find padding-characters config-padding-symbols/padding-character) + 1 / 2
+            (index? find padding-characters config/config-padding-symbols/padding-character) + 1 / 2
         user-specified-fixed-padding-alphabet/text:
-            form reduce [ config-padding-symbols/chosen-from ]
+            trim/all form reduce [ config/config-padding-symbols/chosen-from ]
         user-specified-fixed-padding-specified-character/text:
-            form reduce [ config-padding-symbols/character ] ]
+            form reduce [ config/config-padding-symbols/character ] ]
     if user-specified-padding-type/selected = adaptive-padding [
         user-specified-adaptive-padding-length/text:
-            config-padding-symbols/pad-to-length
+            to string! config/config-padding-symbols/pad-to-length
         user-specified-adaptive-padding-character/selected:
-            (index? find padding-characters config-padding-symbols/padding-character) + 1 / 2
+            (index? find padding-characters config/config-padding-symbols/padding-character) + 1 / 2
         user-specified-adaptive-padding-alphabet/text:
-            form reduce [ config-padding-symbols/chosen-from ]
+            trim/all form reduce [ config/config-padding-symbols/chosen-from ]
         user-specified-adaptive-padding-specified-character/text:
-            form reduce [ config-padding-symbols/character ] ]
+            form reduce [ config/config-padding-symbols/character ] ]
 ]
 
 collect-config-settings: func [
 ] [
-    probe compose/deep [
+    compose/deep [
         config-words [
+            dictionary (dictionaries/(user-specified-dictionary/selected * 2 - 1))
             word-count (word-counts/(user-specified-word-count/selected * 2 - 1))
             minimum-length (word-lengths/(user-specified-min-len/selected * 2 - 1))
             maximum-length (word-lengths/(user-specified-max-len/selected * 2 - 1)) ]
@@ -220,24 +231,21 @@ collect-config-settings: func [
         config-padding-symbols [
             padding-type (padding-types/(user-specified-padding-type/selected * 2 - 1))
             (either user-specified-padding-type/selected = fixed-padding [
-                reduce [
-                    'symbols-before (padding-digits/(user-specified-fixed-padding-before/selected * 2 - 1))
-                    'symbols-after (padding-digits/(user-specified-fixed-padding-after/selected * 2 - 1))
-                    'padding-character (padding-characters/(user-specified-fixed-padding-character/selected * 2 - 1))
-                    either (user-specified-padding-type/selected = fixed-padding) and
-                           (user-specified-fixed-padding-character/selected = random-character) [
+                compose [
+                    symbols-before (padding-digits/(user-specified-fixed-padding-before/selected * 2 - 1))
+                    symbols-after (padding-digits/(user-specified-fixed-padding-after/selected * 2 - 1))
+                    padding-character (padding-characters/(user-specified-fixed-padding-character/selected * 2 - 1))
+                    (either (user-specified-padding-type/selected = fixed-padding) and
+                            (user-specified-fixed-padding-character/selected = random-character) [
                         reduce [ 'chosen-from (user-specified-fixed-padding-alphabet/text) ] ] [
-                        reduce [ 'character (user-specified-fixed-padding-specified-character/text) ] ] ]
-             ] [
-                reduce [
+                        reduce [ 'character (user-specified-fixed-padding-specified-character/text) ] ]) ] ] [
+                compose [
                     'pad-to-length (user-specified-adaptive-padding-length/text)
-                    'padding-character (user-specified-adaptive-padding-character/text)
-                    either (user-specified-padding-type/selected = adaptive-padding) and
-                           (user-specified-adaptive-padding-character/selected = random-character) [
+                    'padding-character (padding-characters/(user-specified-adaptive-padding-character/selected * 2 - 1))
+                    (either (user-specified-padding-type/selected = adaptive-padding) and
+                            (user-specified-adaptive-padding-character/selected = random-character) [
                         reduce [ 'chosen-from (user-specified-adaptive-padding-alphabet/text) ] ] [
-                        reduce [ 'character (user-specified-adaptive-padding-specified-character/text) ] ] ] ]
-             ) ]
-        ]
+                        reduce [ 'character (user-specified-adaptive-padding-specified-character/text) ] ]) ] ]) ] ]
 ]
 
 view/flags [
@@ -264,7 +272,7 @@ view/flags [
             origin 20x20
 
             text "Dictionary:"
-            user-specified-dictionary: drop-down focus select 1 data [ "English" ]
+            user-specified-dictionary: drop-down focus select 1 data dictionaries
 
             text "Number of Words:"
             user-specified-word-count: drop-down select 1 35x1 data word-counts
@@ -340,11 +348,11 @@ view/flags [
             user-specified-fixed-padding-specified-character: field 35 "*" react [
                 face/visible?: (user-specified-padding-type/selected = fixed-padding) and
                     (user-specified-fixed-padding-character/selected = specified-character) ]
+            return
             text "Pad to Length:" react [
                 face/visible?: user-specified-padding-type/selected = adaptive-padding ]
             user-specified-adaptive-padding-length: field 70 "63" react [
                 face/visible?: user-specified-padding-type/selected = adaptive-padding ]
-            return
             text "Padding Character:" react [
                 face/visible?: user-specified-padding-type/selected = adaptive-padding ]
             user-specified-adaptive-padding-character: drop-down select 1
