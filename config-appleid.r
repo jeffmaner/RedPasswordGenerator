@@ -10,7 +10,7 @@ Red [ Title: "Password Generator AppleID Configuration"
 
 config-words:
 [
-    dictionary %sample_dict_EN.txt
+    dictionary %dict_EN_sample.txt
     word-count 3
     minimum-length 5
     maximum-length 7

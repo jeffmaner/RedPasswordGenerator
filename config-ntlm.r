@@ -10,7 +10,7 @@ Red [ Title: "Password Generator NTLM Configuration"
 
 config-words:
 [
-    dictionary %sample_dict_EN.txt
+    dictionary %dict_EN_sample.txt
     word-count 2
     minimum-length 5
     maximum-length 5

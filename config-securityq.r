@@ -10,7 +10,7 @@ Red [ Title: "Password Generator Security Question Configuration"
 
 config-words:
 [
-    dictionary %sample_dict_EN.txt
+    dictionary %dict_EN_sample.txt
     word-count 6
     minimum-length 4
     maximum-length 8
