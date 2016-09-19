@@ -4,13 +4,8 @@ Red [ Title: "Password Generation GUI"
       Needs: 'view
 ]
 
-;; TODO: Refactor everything to enforce local scope and minimize globals.
-;; TODO: Refactor to shorter names.
-;; TODO: Test all preset loads and generated passwords.
-;; TODO: Test all preset loads and generated passwords with fresh instances.
-;; TODO: Refactor group-boxes and view.
 ;; TODO: Implement save/load of custom configuration.
-;; TODO: Implement dictionary selection.
+;; TODO: Refactor group-boxes and view.
 
 do load %ancillary.r
 
@@ -157,7 +152,7 @@ apply-preset: func [
         'web-32     [ load %config-web32.r     ]
         'wifi       [ load %config-wifi.r      ]
         'xkcd       [ load %config-xkcd.r      ]
-    ] [ view/flags [ below text "Invalid Config." button "OK" [ unview ] ] [ 'modal ] ]
+    ] [ load preset ]
 
     user-specified-dictionary/selected:
         (index? find dictionaries config/config-words/dictionary) + 1 / 2
@@ -370,6 +365,17 @@ view/flags [
             user-specified-adaptive-padding-specified-character: field 35 "*" react [
                 face/visible?: (user-specified-padding-type/selected = adaptive-padding) and
                     (user-specified-adaptive-padding-character/selected = specified-character) ]
+        ] return
+
+        group-box "LOAD/SAVE CONFIG" [ across
+            origin 20x20
+            button "Save Config" on-up [
+                resulting-config/text: copy ""
+                append resulting-config/text mold collect-config-settings ]
+            button "Load Config" on-up [
+                apply-preset resulting-config/text ] return
+
+            resulting-config: area
         ]
     ]
 
