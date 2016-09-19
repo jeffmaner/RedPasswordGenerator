@@ -22,7 +22,7 @@ naturals: func [
 ]
 
 map-each: func [
-    "Implements Rebol's map-each which Red doesn't have."
+    "Kind-of implements Rebol's map-each which Red doesn't have yet."
 
     x [ word! integer! string! ]
     xs [ series! ]
