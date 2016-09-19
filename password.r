@@ -69,18 +69,17 @@ pick-separator: func [
     switch/default config/separator-type [
         'no-separator [ ]
         'random-character [ random/only config/chosen-from ]
-        'specified-character [ do config/character ]
-    ] [ ]
+        'specified-character [ config/character ]
+    ] [ print "Unexpected separator-type." ]
 ]
 
-get-pad-digits: func [ n [ integer! ] ] [
-    map-each n naturals/to n [ random 9 ]
+get-pad-digits: func [ n [ integer! ] /local x ] [
+    map-each 'x naturals/to n [ random 9 ]
 ]
 
 get-padding-symbols: func [
-    config "config-padding-symbols"
+    config
     words [ series! ] "transformed-words"
-    separator [ char! ]
 
     /local symbols-before symbols-after padding-symbols
 ] [
@@ -88,26 +87,26 @@ get-padding-symbols: func [
     symbols-after:   copy []
     padding-symbols: copy []
 
-    switch/default config/padding-type [
+    switch/default config/config-padding-symbols/padding-type [
         'no-padding [ ]
         'fixed-padding [
-            symbol: either config/padding-character = 'random-character [
-                random/only config/chosen-from ] [
-                config/character ]
-            loop config/symbols-before [ append symbols-before symbol ]
-            loop config/symbols-after [ append symbols-after symbol ] ]
+            symbol: either config/config-padding-symbols/padding-character = 'random-character [
+                random/only config/config-padding-symbols/chosen-from ] [
+                config/config-padding-symbols/character ]
+            loop config/config-padding-symbols/symbols-before [ append symbols-before symbol ]
+            loop config/config-padding-symbols/symbols-after [ append symbols-after symbol ] ]
         'adaptive-padding [
             character-count: 0
             foreach word words [
                 character-count: character-count + length? word ]
             character-count: character-count
                 + 1 ;; For separator.
-                + (length? pad-digits-before)
-                + (length? pad-digits-after)
-            characters-required: config/pad-to-length
-            character: either config/padding-character = 'random-character [
-                random/only config/chosen-from ] [
-                config/character ]
+                + config/config-padding-digits/digits-before
+                + config/config-padding-digits/digits-after
+            characters-required: to integer! config/config-padding-symbols/pad-to-length
+            character: either config/config-padding-symbols/padding-character = 'random-character [
+                random/only config/config-padding-symbols/chosen-from ] [
+                config/config-padding-symbols/character ]
             loop characters-required - character-count [
                 append padding-symbols character ] ]
     ] [ ]
@@ -129,7 +128,7 @@ generate-password: func [
     separator: pick-separator config/config-separator
     pad-digits-before: get-pad-digits config/config-padding-digits/digits-before
     pad-digits-after: get-pad-digits config/config-padding-digits/digits-after
-    padding-symbols: get-padding-symbols config/config-padding-symbols transformed-words separator
+    padding-symbols: get-padding-symbols config transformed-words
 
     password: copy []
 
@@ -141,10 +140,10 @@ generate-password: func [
     foreach w naturals/to length? transformed-words [
         unless none? separator [ append password separator ]
         append password transformed-words/(w) ]
-    unless (none? separator) or (separator = #" ") [ append password separator ]
+    unless (none? separator) or (separator = " ") [ append password separator ]
     unless empty? pad-digits-after [ append password pad-digits-after ]
     unless empty? padding-symbols [
-        either error? try [ padding-symbols/after ] [
+        either none? padding-symbols/after [
             append password padding-symbols ] [
             unless empty? padding-symbols/after [
                 append password padding-symbols/after ] ] ]
