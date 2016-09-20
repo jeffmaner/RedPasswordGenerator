@@ -4,18 +4,14 @@ Red [ Title: "Password Generation GUI"
       Needs: 'view
 ]
 
-;; TODO: Implement save/load of custom configuration.
-;; TODO: Refactor group-boxes and view.
-
 do load %ancillary.r
 
 filter-words: func [
     words [ series! ]
     config [ block! ]
 
-    /local words-needed minimum-word-length maximum-word-length filtered-words word n
+    /local minimum-word-length maximum-word-length filtered-words word n
 ] [
-    words-needed: do config/config-words/word-count
     minimum-word-length: do config/config-words/minimum-length
     maximum-word-length: do config/config-words/maximum-length
 
@@ -41,7 +37,7 @@ generate-passwords: func [
 
     do load %password.r
     generated-passwords: copy []
-    foreach n naturals/to passwords [
+    foreach n (naturals/to passwords) [
         append generated-passwords generate-password filtered-words config ]
 
     do load %entropy.r
