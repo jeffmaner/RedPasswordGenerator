@@ -18,16 +18,33 @@ Running the generator
 From the Red Console:
 
 ```
-    >> do load %gui.r
+    >> do load %src/gui.r
 ```
 
 opens the GUI. To run the non-gui version from the Red Console:
 
 ```
-    >> do/args %generate-password.r [ config %config-default.r passwords 3 ]
+    >> do/args %src/generate-password.r [ config %config/default.r passwords 3 ]
 ```
 
 will generate three passwords using the default configuration file.
+
+N.b.
+----
+
++ Calling
+
+```
+do/args %src/generate-password.r [ config <config.r> passwords 3 ]
+```
+
+and then
+
+```
+do/args %src/generate-password.r [ config <config.r> ]
+```
+
+will result in three passwords generated.
 
 [1]: https://xkpasswd.net/s/
 [2]: http://www.red-lang.org

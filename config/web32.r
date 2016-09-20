@@ -10,7 +10,7 @@ Red [ Title: "Password Generator Web32 Configuration"
 
 config-words:
 [
-    dictionary %dict_EN_sample.txt
+    dictionary %dict/EN_sample.txt
     word-count 4
     minimum-length 4
     maximum-length 5

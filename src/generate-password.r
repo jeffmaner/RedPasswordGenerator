@@ -2,24 +2,27 @@ Red [ Title: "Password Generator"
       Author: "Jeff Maner"
       Date: "2016-08-15"
       Inspired-by: https://xkpasswd.net/s/
-      Usage: { "do/args %generate-password.r [ config %config-default.r passwords 3 ]"
-               "do/args %generate-password.r [ config %config-appleid.r passwords 2 ]"
-               "do/args %generate-password.r [ config %config-xkcd.r passwords 5 ]"
-               "do/args %generate-password.r [ config %config-securityq.r ]" }
-      Notes: [ { Calling do/args %generate-password.r [ config <config.r> passwords 3 ]
-and then do/args %generate-password.r [ config <config.r> ]
+      Usage: { "do/args %src/generate-password.r [ config %config/default.r passwords 3 ]"
+               "do/args %src/generate-password.r [ config %config/appleid.r passwords 2 ]"
+               "do/args %src/generate-password.r [ config %config/xkcd.r passwords 5 ]"
+               "do/args %src/generate-password.r [ config %config/securityq.r ]" }
+      Notes: [ { Calling do/args %src/generate-password.r [ config <config.r> passwords 3 ]
+and then do/args %src/generate-password.r [ config <config.r> ]
 will result in three passwords generated. }
              { http://bbusschots.github.io/hsxkpasswd/XKPasswd/pod.html }
              { Entropy calculations are off. One reason is Red's apparent inability
 to handle big numbers. } ]
 ]
 
+;; Running the script will change-dir into %src. Go back up.
+change-dir %..
+
 parse system/script/args [ some [ 'config    set config-file file!
                                 | 'passwords set passwords   integer! ] ]
 
-do load %ancillary.r
+do load %src/shared/ancillary.r
 
-do load either file? config-file [ config-file ] [ %config-default.r ]
+do load either file? config-file [ config-file ] [ %config/default.r ]
 
 passwords: either none? passwords [ 1 ] [ passwords ]
 
@@ -53,14 +56,14 @@ filter-words: func [
 
 filtered-words: filter-words words config
                         
-do load %password.r
+do load %src/shared/password.r
 generated-passwords: copy []
 foreach n naturals/to passwords [
     append generated-passwords generate-password filtered-words config ]
 
 foreach password generated-passwords [ print password ]
 
-do load %entropy.r
+do load %src/shared/entropy.r
 print [ "Blind Entropy: " to integer! blind-entropy config ]
 print [ "Seen Entropy: " to integer! seen-entropy filtered-words config ]
 

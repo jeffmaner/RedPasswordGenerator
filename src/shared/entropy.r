@@ -6,9 +6,9 @@ to handle big numbers. }
                { http://bbusschots.github.io/hsxkpasswd/XKPasswd/pod.html } ]
 ]
 
-do load %bignumbers.r
-do load %entropy-blind.r
-do load %entropy-seen.r
+do load %src/shared/bignumbers.r
+do load %src/shared/entropy-blind.r
+do load %src/shared/entropy-seen.r
 
 blind-entropy: func [
     config [ block! ]

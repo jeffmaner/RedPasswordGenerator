@@ -4,7 +4,7 @@ Red [ Title: "Password Generation GUI"
       Needs: 'view
 ]
 
-do load %ancillary.r
+do load %src/shared/ancillary.r
 
 filter-words: func [
     words [ series! ]
@@ -35,12 +35,12 @@ generate-passwords: func [
 
     filtered-words: filter-words words config
 
-    do load %password.r
+    do load %src/shared/password.r
     generated-passwords: copy []
     foreach n (naturals/to passwords) [
         append generated-passwords generate-password filtered-words config ]
 
-    do load %entropy.r
+    do load %src/shared/entropy.r
 
     compose/deep [
         passwords [(reduce generated-passwords)]
@@ -73,9 +73,9 @@ password-counts: [ 1 "1" 2 "2" 3 "3" 4 "4" 5 "5" 6 "6" 7 "7" 8 "8" 9 "9" 10 "10"
 
 dictionaries:
 [
-    %dict_EN_sample.txt "English"
-    %dict_EN_dirty.txt "Dirty"
-    %dict_EN_curse.txt "Only Curses"
+    %dict/EN_sample.txt "English"
+    %dict/EN_dirty.txt "Dirty"
+    %dict/EN_curse.txt "Only Curses"
 ]
 
 transformations:
@@ -140,14 +140,14 @@ apply-preset: func [
 ] [
     config: copy []
     config: switch/default preset [
-        'apple-id   [ load %config-appleid.r   ]
-        'default    [ load %config-default.r   ]
-        'ntlm       [ load %config-ntlm.r      ]
-        'security-q [ load %config-securityq.r ]
-        'web-16     [ load %config-web16.r     ]
-        'web-32     [ load %config-web32.r     ]
-        'wifi       [ load %config-wifi.r      ]
-        'xkcd       [ load %config-xkcd.r      ]
+        'apple-id   [ load %config/appleid.r   ]
+        'default    [ load %config/default.r   ]
+        'ntlm       [ load %config/ntlm.r      ]
+        'security-q [ load %config/securityq.r ]
+        'web-16     [ load %config/web16.r     ]
+        'web-32     [ load %config/web32.r     ]
+        'wifi       [ load %config/wifi.r      ]
+        'xkcd       [ load %config/xkcd.r      ]
     ] [ load preset ]
 
     user-specified-dictionary/selected:
