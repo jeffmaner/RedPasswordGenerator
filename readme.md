@@ -18,7 +18,7 @@ Running the generator
 From the Red Console:
 
 ```
-    >> do %gui.r
+    >> do load %gui.r
 ```
 
 opens the GUI. To run the non-gui version from the Red Console:
