@@ -17,12 +17,16 @@ to handle big numbers. } ]
 ;; Running the script will change-dir into %src. Go back up.
 change-dir %..
 
-parse system/script/args [ some [ 'config    set config-file file!
-                                | 'passwords set passwords   integer! ] ]
+config-file: none
+passwords: none
+
+unless none? system/script/args [
+    parse system/script/args [ some [ 'config    set config-file file!
+                                    | 'passwords set passwords   integer! ] ] ]
 
 do load %src/shared/ancillary.r
 
-do load either file? config-file [ config-file ] [ %config/default.r ]
+do load either none? config-file [ %config/default.r ] [ config-file ]
 
 passwords: either none? passwords [ 1 ] [ passwords ]
 
