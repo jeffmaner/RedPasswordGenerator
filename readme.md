@@ -32,7 +32,7 @@ will generate three passwords using the default configuration file.
 N.b.
 ----
 
-+ Calling
+Calling
 
 ```
 do/args %src/generate-password.r [ config <config.r> passwords 3 ]
