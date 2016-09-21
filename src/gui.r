@@ -286,7 +286,8 @@ view/flags [
             origin 20x20
             text "Type:"
             user-specified-separator-type:
-                drop-down select 1 data separator-descriptions
+                drop-down select 1 data separator-descriptions on-change [
+                    face/selected: face/selected ]
             text "Separator Alphabet:" react [
                 face/visible?: user-specified-separator-type/selected = random-character ]
             user-specified-random-separator-char:
@@ -310,7 +311,8 @@ view/flags [
         group-box "PADDING SYMBOLS" [ across
             origin 20x20
             text "Padding Type:"
-            user-specified-padding-type: drop-down select 1 data padding-descriptions
+            user-specified-padding-type: drop-down select 1 data padding-descriptions on-change [
+                face/selected: face/selected ]
             text "Symbols Before:" react [
                 face/visible?: user-specified-padding-type/selected = fixed-padding ]
             user-specified-fixed-padding-before:
@@ -325,8 +327,9 @@ view/flags [
             text "Padding Character:" react [
                 face/visible?: user-specified-padding-type/selected = fixed-padding ]
             user-specified-fixed-padding-character: drop-down select 1
-                data padding-characters-descriptions react [
-                    face/visible?: user-specified-padding-type/selected = fixed-padding ]
+                data padding-characters-descriptions
+                    on-change [ face/selected: face/selected ]
+                    react [ face/visible?: user-specified-padding-type/selected = fixed-padding ]
             text "Padding Character Alphabet:" react [
                 face/visible?: (user-specified-padding-type/selected = fixed-padding) and
                     (user-specified-fixed-padding-character/selected = random-character) ]
@@ -347,8 +350,9 @@ view/flags [
             text "Padding Character:" react [
                 face/visible?: user-specified-padding-type/selected = adaptive-padding ]
             user-specified-adaptive-padding-character: drop-down select 1
-                data padding-characters-descriptions react [
-                    face/visible?: user-specified-padding-type/selected = adaptive-padding ]
+                data padding-characters-descriptions
+                    on-change [ face/selected: face/selected ]
+                    react [ face/visible?: user-specified-padding-type/selected = adaptive-padding ]
             text "Padding Character Alphabet:" react [
                 face/visible?: (user-specified-padding-type/selected = adaptive-padding) and
                     (user-specified-adaptive-padding-character/selected = random-character) ]
